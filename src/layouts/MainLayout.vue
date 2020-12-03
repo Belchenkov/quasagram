@@ -2,20 +2,10 @@
   <q-layout view="lHh Lpr lFf">
     <q-header class="bg-brown-8" elevated>
       <q-toolbar>
-        <q-btn
-          flat
-          dense
-          round
-          icon="menu"
-          aria-label="Menu"
-          @click="leftDrawerOpen = !leftDrawerOpen"
-        />
-
-        <q-toolbar-title>
-          Quasar App
+        <q-toolbar-title class="row justify-center items-center">
+          <q-icon class="q-mr-sm" size="25px" name="camera_enhance"></q-icon>
+          <div>Quasagram</div>
         </q-toolbar-title>
-
-        <div>Quasar v{{ $q.version }}</div>
       </q-toolbar>
     </q-header>
 
@@ -30,8 +20,14 @@
             align="center"
             class="text-white"
         >
-          <q-route-tab to="/" name="home" icon="home" label="Home" />
-          <q-route-tab to="/camera" name="camera" icon="camera" label="Camera" />
+          <q-route-tab
+            to="/"
+            icon="home"
+          />
+          <q-route-tab
+            to="/camera"
+            icon="camera"
+          />
         </q-tabs>
     </q-footer>
   </q-layout>

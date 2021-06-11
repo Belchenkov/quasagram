@@ -2,7 +2,7 @@
   <q-layout view="lHh Lpr lFf">
     <q-header class="bg-brown-8" elevated>
       <q-toolbar>
-        <q-toolbar-title class="row justify-center items-center">
+        <q-toolbar-title class="row justify-center items-center text-bold">
           <q-icon class="q-mr-sm" size="25px" name="camera_enhance"></q-icon>
           <div>Quasagram</div>
         </q-toolbar-title>
@@ -43,3 +43,12 @@ export default {
   }
 }
 </script>
+
+<style lang="sass">
+  .q-toobar__title
+    text-align: center
+    font-size: 30px
+  .q-footer
+    .q-tab__icon
+      font-size: 30px
+</style>

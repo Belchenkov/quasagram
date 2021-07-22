@@ -2,10 +2,29 @@
   <q-layout view="lHh Lpr lFf">
     <q-header class="bg-brown-8" elevated>
       <q-toolbar>
-        <q-toolbar-title class="row justify-center items-center text-bold">
-          <q-icon class="q-mr-sm" size="25px" name="camera_enhance"></q-icon>
+        <q-btn
+          to="/camera"
+          dense
+          class="q-mr-sm large-screen-only"
+          size="15px"
+          icon="camera"
+        ></q-btn>
+        <q-separator vertical class="large-screen-only" />
+        <q-toolbar-title class="row justify-center items-center text-bold constrain">
+          <q-icon
+            name="camera_enhance"
+            class="q-mr-sm"
+            size="25px"
+          ></q-icon>
           <div>Quasagram</div>
         </q-toolbar-title>
+        <q-btn
+          to="/"
+          dense
+          class="q-mr-sm large-screen-only"
+          size="15px"
+          icon="home"
+        ></q-btn>
       </q-toolbar>
     </q-header>
 
@@ -13,7 +32,7 @@
       <router-view />
     </q-page-container>
 
-    <q-footer bordered class="bg-brown-8" elevated>
+    <q-footer bordered class="bg-brown-8 small-screen-only" elevated>
         <q-tabs
             indicator-color="transparent"
             active-color="warning"
@@ -45,6 +64,9 @@ export default {
 </script>
 
 <style lang="sass">
+  .q-toobar
+    @media (min-width: $breakpoint-sm-min)
+      height: 77px
   .q-toobar__title
     text-align: center
     font-size: 30px

@@ -7,4 +7,14 @@ header,
 footer
   text-shadow: 0 1px 4px rgba(0, 0, 0, .5)
 
+.small-screen-only
+  @media (max-width: $breakpoint-xs-max)
+    display: block
+  @media (min-width: $breakpoint-sm-min)
+    display: none
 
+.large-screen-only
+  @media (max-width: $breakpoint-xs-max)
+    display: none
+  @media (min-width: $breakpoint-sm-min)
+    display: block

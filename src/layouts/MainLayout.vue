@@ -13,7 +13,7 @@
       <router-view />
     </q-page-container>
 
-    <q-footer bordered class="bg-brown-8" elevated>
+    <q-footer bordered class="bg-brown-8 small-screen-only" elevated>
         <q-tabs
             indicator-color="transparent"
             active-color="warning"

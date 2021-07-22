@@ -2,10 +2,28 @@
   <q-layout view="lHh Lpr lFf">
     <q-header class="bg-brown-8" elevated>
       <q-toolbar>
+        <q-btn
+          to="/camera"
+          dense
+          class="q-mr-sm large-screen-only"
+          size="15px"
+          icon="eva-camera-outline"
+        ></q-btn>
         <q-toolbar-title class="row justify-center items-center text-bold">
-          <q-icon class="q-mr-sm" size="25px" name="camera_enhance"></q-icon>
+          <q-icon
+            name="camera_enhance"
+            class="q-mr-sm"
+            size="25px"
+          ></q-icon>
           <div>Quasagram</div>
         </q-toolbar-title>
+        <q-btn
+          to="/"
+          dense
+          class="q-mr-sm large-screen-only"
+          size="15px"
+          icon="eva-home-outline"
+        ></q-btn>
       </q-toolbar>
     </q-header>
 

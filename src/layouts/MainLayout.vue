@@ -7,9 +7,10 @@
           dense
           class="q-mr-sm large-screen-only"
           size="15px"
-          icon="eva-camera-outline"
+          icon="camera"
         ></q-btn>
-        <q-toolbar-title class="row justify-center items-center text-bold">
+        <q-separator vertical class="large-screen-only" />
+        <q-toolbar-title class="row justify-center items-center text-bold constrain">
           <q-icon
             name="camera_enhance"
             class="q-mr-sm"
@@ -22,7 +23,7 @@
           dense
           class="q-mr-sm large-screen-only"
           size="15px"
-          icon="eva-home-outline"
+          icon="home"
         ></q-btn>
       </q-toolbar>
     </q-header>
@@ -63,6 +64,9 @@ export default {
 </script>
 
 <style lang="sass">
+  .q-toobar
+    @media (min-width: $breakpoint-sm-min)
+      height: 77px
   .q-toobar__title
     text-align: center
     font-size: 30px

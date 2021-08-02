@@ -29,6 +29,7 @@
         outlined
         label="Choose an image"
         accept="image/*"
+        @input="captureImageFallback"
       >
         <template v-slot:prepend>
           <q-icon name="eva-attach-outline" />
@@ -111,6 +112,25 @@ export default {
       this.imageCaptured = true;
       this.post.photo = this.dataURItoBlob(canvas.toDataURL());
     },
+    captureImageFallback(file) {
+      let canvas = this.$refs.canvas;
+      let context = canvas.getContext('2d');
+      const reader = new FileReader();
+
+      this.post.photo = file;
+
+      reader.onload = event => {
+        const img = new Image();
+        img.onload = () => {
+          canvas.width = img.width;
+          canvas.height = img.height;
+          context.drawImage(img, 0, 0);
+          this.imageCaptured = true;
+        }
+        img.src = event.target.result;
+      }
+      reader.readAsDataURL(file);
+    },
     dataURItoBlob(dataURI) {
       // convert base64 to raw binary data held in a string
       // doesn't handle URLEncoded DataURIs - see SO answer #6850276 for code that does this
@@ -132,7 +152,7 @@ export default {
 
       // write the ArrayBuffer to a blob, and you're done
       return new Blob([ab], {type: mimeString});
-    }
+    },
   },
   mounted() {
     this.initCamera();

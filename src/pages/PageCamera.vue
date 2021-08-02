@@ -17,11 +17,23 @@
     <div class="text-center q-pa-md">
       <q-btn
         @click="captureImage"
+        v-if="hasCameraSupport"
         color="primary"
         icon="eva-camera"
         round
         size="lg"
       />
+      <q-file
+        v-else
+        v-model="imageUpload"
+        outlined
+        label="Choose an image"
+        accept="image/*"
+      >
+        <template v-slot:prepend>
+          <q-icon name="eva-attach-outline" />
+        </template>
+      </q-file>
       <div class="row justify-center q-ma-md">
         <q-input
           class="col col-sm-6"
@@ -63,7 +75,9 @@ export default {
   name: 'PageCamera',
   data() {
     return {
+      imageUpload: [],
       imageCaptured: false,
+      hasCameraSupport: true,
       post: {
         id: uid(),
         caption: '',
@@ -79,7 +93,10 @@ export default {
         video: true,
       }).then(stream => {
         this.$refs.video.srcObject = stream;
-      }).catch(err => console.error(err));
+      }).catch(err => {
+        this.hasCameraSupport = false;
+        console.error(err);
+      })
     },
     captureImage() {
       let video = this.$refs.video;
@@ -90,7 +107,31 @@ export default {
 
       let context = canvas.getContext('2d');
       context.drawImage(video, 0, 0, canvas.width, canvas.height);
+
       this.imageCaptured = true;
+      this.post.photo = this.dataURItoBlob(canvas.toDataURL());
+    },
+    dataURItoBlob(dataURI) {
+      // convert base64 to raw binary data held in a string
+      // doesn't handle URLEncoded DataURIs - see SO answer #6850276 for code that does this
+      const byteString = atob(dataURI.split(',')[1]);
+
+      // separate out the mime component
+      const mimeString = dataURI.split(',')[0].split(':')[1].split(';')[0]
+
+      // write the bytes of the string to an ArrayBuffer
+      const ab = new ArrayBuffer(byteString.length);
+
+      // create a view into the buffer
+      const ia = new Uint8Array(ab);
+
+      // set the bytes of the buffer to the correct values
+      for (let i = 0; i < byteString.length; i++) {
+        ia[i] = byteString.charCodeAt(i);
+      }
+
+      // write the ArrayBuffer to a blob, and you're done
+      return new Blob([ab], {type: mimeString});
     }
   },
   mounted() {

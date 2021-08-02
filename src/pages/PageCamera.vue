@@ -2,13 +2,21 @@
   <q-page class="constrain-more q-pa-md">
     <div class="camera-frame q-pa-md">
       <video
+        v-show="!imageCaptured"
         class="full-width"
         autoplay
         ref="video"
       />
+      <canvas
+        v-show="imageCaptured"
+        ref="canvas"
+        class="full-width"
+        height="240"
+      />
     </div>
     <div class="text-center q-pa-md">
       <q-btn
+        @click="captureImage"
         color="primary"
         icon="eva-camera"
         round
@@ -49,11 +57,13 @@
 
 <script>
 import { uid } from "quasar";
+require('md-gum-polyfill');
 
 export default {
   name: 'PageCamera',
   data() {
     return {
+      imageCaptured: false,
       post: {
         id: uid(),
         caption: '',
@@ -70,6 +80,17 @@ export default {
       }).then(stream => {
         this.$refs.video.srcObject = stream;
       }).catch(err => console.error(err));
+    },
+    captureImage() {
+      let video = this.$refs.video;
+      let canvas = this.$refs.canvas;
+
+      canvas.width = video.getBoundingClientRect().width;
+      canvas.height = video.getBoundingClientRect().height;
+
+      let context = canvas.getContext('2d');
+      context.drawImage(video, 0, 0, canvas.width, canvas.height);
+      this.imageCaptured = true;
     }
   },
   mounted() {

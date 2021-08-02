@@ -88,6 +88,11 @@ export default {
       }
     }
   },
+  beforeDestroy() {
+    if (this.hasCameraSupport) {
+      this.disableCamera();
+    }
+  },
   methods: {
     initCamera() {
       navigator.mediaDevices.getUserMedia({
@@ -111,6 +116,7 @@ export default {
 
       this.imageCaptured = true;
       this.post.photo = this.dataURItoBlob(canvas.toDataURL());
+      this.disableCamera();
     },
     captureImageFallback(file) {
       let canvas = this.$refs.canvas;
@@ -130,6 +136,11 @@ export default {
         img.src = event.target.result;
       }
       reader.readAsDataURL(file);
+    },
+    disableCamera() {
+      this.$refs.video.srcObject.getVideoTracks().forEach(track => {
+        track.stop();
+      });
     },
     dataURItoBlob(dataURI) {
       // convert base64 to raw binary data held in a string

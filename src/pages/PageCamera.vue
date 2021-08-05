@@ -152,7 +152,7 @@ export default {
       navigator.geolocation.getCurrentPosition(position => {
         this.getCityAndCountry(position);
       }, err => {
-        console.log('err: ', err);
+        this.locationError(err);
       }, {
         timeout: 7000
       });
@@ -163,7 +163,7 @@ export default {
         const location = await this.$axios.get(apiUrl);
         this.locationSuccess(location);
       } catch (err) {
-        console.error(err);
+        this.locationError(err);
       }
     },
     locationSuccess({ data }) {
@@ -172,6 +172,12 @@ export default {
       if (data.country) {
         this.post.location += `, ${data.country}`;
       }
+    },
+    locationError(err) {
+      this.$q.dialog({
+        title: 'Error',
+        message: err.message
+      });
     },
     dataURItoBlob(dataURI) {
       // convert base64 to raw binary data held in a string

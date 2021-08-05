@@ -51,7 +51,13 @@
           dense
         >
           <template v-slot:append>
-            <q-btn round dense flat icon="eva-navigation-2-outline" />
+            <q-btn
+              @click="getLocation"
+              round
+              dense
+              flat
+              icon="eva-navigation-2-outline"
+            />
           </template>
         </q-input>
       </div>
@@ -140,6 +146,15 @@ export default {
     disableCamera() {
       this.$refs.video.srcObject.getVideoTracks().forEach(track => {
         track.stop();
+      });
+    },
+    getLocation() {
+      navigator.geolocation.getCurrentPosition(position => {
+        console.log('position', position);
+      }, err => {
+        console.log('err: ', err);
+      }, {
+        timeout: 7000
       });
     },
     dataURItoBlob(dataURI) {

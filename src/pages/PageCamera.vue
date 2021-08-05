@@ -49,9 +49,11 @@
           label="Location"
           v-model="post.location"
           dense
+          :loading="locationLoading"
         >
           <template v-slot:append>
             <q-btn
+              v-if="!locationLoading"
               @click="getLocation"
               round
               dense
@@ -85,6 +87,7 @@ export default {
       imageUpload: [],
       imageCaptured: false,
       hasCameraSupport: true,
+      locationLoading: false,
       post: {
         id: uid(),
         caption: '',
@@ -149,6 +152,7 @@ export default {
       });
     },
     getLocation() {
+      this.locationLoading = true;
       navigator.geolocation.getCurrentPosition(position => {
         this.getCityAndCountry(position);
       }, err => {
@@ -172,12 +176,14 @@ export default {
       if (data.country) {
         this.post.location += `, ${data.country}`;
       }
+      this.locationLoading = false;
     },
     locationError(err) {
       this.$q.dialog({
         title: 'Error',
         message: err.message
       });
+      this.locationLoading = false;
     },
     dataURItoBlob(dataURI) {
       // convert base64 to raw binary data held in a string

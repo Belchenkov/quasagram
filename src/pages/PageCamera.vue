@@ -49,9 +49,17 @@
           label="Location"
           v-model="post.location"
           dense
+          :loading="locationLoading"
         >
           <template v-slot:append>
-            <q-btn round dense flat icon="eva-navigation-2-outline" />
+            <q-btn
+              v-if="!locationLoading && locationSupported"
+              @click="getLocation"
+              round
+              dense
+              flat
+              icon="eva-navigation-2-outline"
+            />
           </template>
         </q-input>
       </div>
@@ -79,6 +87,7 @@ export default {
       imageUpload: [],
       imageCaptured: false,
       hasCameraSupport: true,
+      locationLoading: false,
       post: {
         id: uid(),
         caption: '',
@@ -91,6 +100,11 @@ export default {
   beforeDestroy() {
     if (this.hasCameraSupport) {
       this.disableCamera();
+    }
+  },
+  computed: {
+    locationSupported() {
+      return ('geolocation' in navigator);
     }
   },
   methods: {
@@ -141,6 +155,40 @@ export default {
       this.$refs.video.srcObject.getVideoTracks().forEach(track => {
         track.stop();
       });
+    },
+    getLocation() {
+      this.locationLoading = true;
+      navigator.geolocation.getCurrentPosition(position => {
+        this.getCityAndCountry(position);
+      }, err => {
+        this.locationError(err);
+      }, {
+        timeout: 7000
+      });
+    },
+    async getCityAndCountry({ coords: { latitude, longitude } }) {
+      const apiUrl = `https://geocode.xyz/${latitude},${longitude}?json=1`;
+      try {
+        const location = await this.$axios.get(apiUrl);
+        this.locationSuccess(location);
+      } catch (err) {
+        this.locationError(err);
+      }
+    },
+    locationSuccess({ data }) {
+      this.post.location = data.city;
+
+      if (data.country) {
+        this.post.location += `, ${data.country}`;
+      }
+      this.locationLoading = false;
+    },
+    locationError(err) {
+      this.$q.dialog({
+        title: 'Error',
+        message: err.message
+      });
+      this.locationLoading = false;
     },
     dataURItoBlob(dataURI) {
       // convert base64 to raw binary data held in a string

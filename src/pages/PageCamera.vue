@@ -150,12 +150,28 @@ export default {
     },
     getLocation() {
       navigator.geolocation.getCurrentPosition(position => {
-        console.log('position', position);
+        this.getCityAndCountry(position);
       }, err => {
         console.log('err: ', err);
       }, {
         timeout: 7000
       });
+    },
+    async getCityAndCountry({ coords: { latitude, longitude } }) {
+      const apiUrl = `https://geocode.xyz/${latitude},${longitude}?json=1`;
+      try {
+        const location = await this.$axios.get(apiUrl);
+        this.locationSuccess(location);
+      } catch (err) {
+        console.error(err);
+      }
+    },
+    locationSuccess({ data }) {
+      this.post.location = data.city;
+
+      if (data.country) {
+        this.post.location += `, ${data.country}`;
+      }
     },
     dataURItoBlob(dataURI) {
       // convert base64 to raw binary data held in a string

@@ -53,7 +53,7 @@
         >
           <template v-slot:append>
             <q-btn
-              v-if="!locationLoading"
+              v-if="!locationLoading && locationSupported"
               @click="getLocation"
               round
               dense
@@ -100,6 +100,11 @@ export default {
   beforeDestroy() {
     if (this.hasCameraSupport) {
       this.disableCamera();
+    }
+  },
+  computed: {
+    locationSupported() {
+      return ('geolocation' in navigator);
     }
   },
   methods: {

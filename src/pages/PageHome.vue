@@ -82,7 +82,7 @@ export default {
           id: 3,
           caption: 'Red Square on the night',
           date: 1647486478610,
-          location: 'Moscow',
+          location: 'Moscow, Russia',
           imageUrl: 'https://c4.wallpaperflare.com/wallpaper/277/94/439/russland-moskau-basiliuskathedrale-wallpaper-preview.jpg'
         },
         {

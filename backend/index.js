@@ -2,7 +2,10 @@ const express = require('express');
 
 const app = express();
 
-app.get('/', (req, res) => {
+app.get('/posts', (req, res) => {
+  const posts = [
+
+  ];
   return res.send('Server Started!');
 })
 

@@ -2,39 +2,44 @@
   <q-page class="constrain q-pa-md">
     <div class="row q-col-gutter-lg">
       <div class="col-12 col-sm-8">
-        <q-card
-          v-for="post in posts"
-          :key="post.id"
-          class="card-post q-mb-md"
-          flat
-          bordered
-        >
-          <q-item>
-            <q-item-section avatar>
-              <q-avatar>
-                <img src="http://193.187.173.150/img/avatar.c67798a5.png">
-              </q-avatar>
-            </q-item-section>
+        <template v-if="loadingPosts">
+          <app-spinner />
+        </template>
+        <template v-else>
+          <q-card
+            v-for="post in posts"
+            :key="post.id"
+            class="card-post q-mb-md"
+            flat
+            bordered
+          >
+            <q-item>
+              <q-item-section avatar>
+                <q-avatar>
+                  <img src="http://193.187.173.150/img/avatar.c67798a5.png">
+                </q-avatar>
+              </q-item-section>
 
-            <q-item-section>
-              <q-item-label class="text-bold">aleksey_belchenkov</q-item-label>
-              <q-item-label caption>
-                {{ post.location }}
-              </q-item-label>
-            </q-item-section>
-          </q-item>
+              <q-item-section>
+                <q-item-label class="text-bold">aleksey_belchenkov</q-item-label>
+                <q-item-label caption>
+                  {{ post.location }}
+                </q-item-label>
+              </q-item-section>
+            </q-item>
 
-          <q-separator />
+            <q-separator />
 
-          <q-img :src="post.imageUrl" />
+            <q-img :src="post.imageUrl" />
 
-          <q-card-section>
-            <div>{{ post.caption }}</div>
-            <div class="row no-wrap items-center">
-              <span class="text-caption text-grey q-ml-sm">{{ post.date | niceDate}}</span>
-            </div>
-          </q-card-section>
-        </q-card>
+            <q-card-section>
+              <div>{{ post.caption }}</div>
+              <div class="row no-wrap items-center">
+                <span class="text-caption text-grey q-ml-sm">{{ post.date | niceDate}}</span>
+              </div>
+            </q-card-section>
+          </q-card>
+        </template>
       </div>
       <div class="col-4 large-screen-only">
         <q-item class="fixed">
@@ -58,16 +63,21 @@
 
 <script>
 import { date } from "quasar";
+import AppSpinner from "components/Spinner";
 
 export default {
   name: 'PageHome',
   data() {
     return {
-      posts: []
+      posts: [],
+      loadingPosts: false,
     }
   },
   created() {
     this.getPosts();
+  },
+  components: {
+    AppSpinner
   },
   filters: {
     niceDate(value) {
@@ -76,11 +86,18 @@ export default {
   },
   methods: {
     getPosts() {
+      this.loadingPosts = true;
+
       this.$axios.get('http://localhost:3000/posts')
       .then(response => {
         this.posts = response.data;
+        this.loadingPosts = false;
       }).catch(err => {
-        console.log('Err: ', err);
+        this.$q.dialog({
+          title: 'Error',
+          message: err.message
+        });
+        this.loadingPosts = false;
       });
     }
   }

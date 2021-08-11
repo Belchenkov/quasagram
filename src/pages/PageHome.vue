@@ -5,6 +5,9 @@
         <template v-if="loadingPosts">
           <app-spinner />
         </template>
+        <template v-if="!loadingPosts && posts.length === 0">
+          <h5 class="text-center text-grey">No Posts Yet.</h5>
+        </template>
         <template v-else>
           <q-card
             v-for="post in posts"

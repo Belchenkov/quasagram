@@ -1,6 +1,18 @@
 const express = require('express');
+const admin = require('firebase-admin');
 
 const app = express();
+
+/**
+ * config -firebase
+ */
+const serviceAccount = require('./serviceAccountKey.json');
+
+admin.initializeApp({
+  credential: admin.credential.cert(serviceAccount)
+});
+
+const db = admin.firestore();
 
 app.get('/posts', (req, res) => {
   const posts = [

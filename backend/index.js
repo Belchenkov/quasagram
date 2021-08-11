@@ -14,11 +14,17 @@ admin.initializeApp({
 
 const db = admin.firestore();
 
-app.get('/posts', (req, res) => {
-  const posts = [
+app.get('/posts',  (req, res) => {
+  const posts = [];
 
-  ];
-  return res.send('Server Started!');
+  db.collection('posts')
+    .get()
+    .then(snapshot => {
+      snapshot.forEach((doc) => {
+        posts.push(doc.data());
+      });
+      return res.send(posts);
+    });
 })
 
 const PORT = process.env.PORT || 3000;

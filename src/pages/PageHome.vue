@@ -63,48 +63,25 @@ export default {
   name: 'PageHome',
   data() {
     return {
-      posts: [
-        {
-          id: 1,
-          caption: 'Volga Bridge',
-          date: 1627386478610,
-          location: 'Saratov, Russia',
-          imageUrl: 'https://www.cruisemapper.com/images/ports/11802-29232893d4.jpg'
-        },
-        {
-          id: 2,
-          caption: 'St. Petersburg in spring',
-          date: 1227386473610,
-          location: 'St.-Petersburg',
-          imageUrl: 'https://blog.radissonblu.com/wp-content/uploads/2019/02/St.-Petersburg-Russia.jpg'
-        },
-        {
-          id: 3,
-          caption: 'Red Square on the night',
-          date: 1647486478610,
-          location: 'Moscow, Russia',
-          imageUrl: 'https://c4.wallpaperflare.com/wallpaper/277/94/439/russland-moskau-basiliuskathedrale-wallpaper-preview.jpg'
-        },
-        {
-          id: 4,
-          caption: 'Kazan Digital Week',
-          date: 1627386378610,
-          location: 'Kazan, Russia',
-          imageUrl: 'https://cdn24.img.ria.ru/images/154345/43/1543454330_0:78:1501:922_1920x0_80_0_0_284987a45d91abba236ba05293645aef.jpg'
-        },
-        {
-          id: 5,
-          caption: 'Southern capital of Russia',
-          date: 1657386478610,
-          location: 'Krasnodar, Russia',
-          imageUrl: 'https://www.advantour.com/russia/images/krasnodar/krasnodar.jpg'
-        }
-      ]
+      posts: []
     }
+  },
+  created() {
+    this.getPosts();
   },
   filters: {
     niceDate(value) {
       return date.formatDate(value, 'MMMM D h:mmA')
+    }
+  },
+  methods: {
+    getPosts() {
+      this.$axios.get('http://localhost:3000/posts')
+      .then(response => {
+        this.posts = response.data;
+      }).catch(err => {
+        console.log('Err: ', err);
+      });
     }
   }
 }

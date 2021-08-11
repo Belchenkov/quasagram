@@ -15,9 +15,12 @@ admin.initializeApp({
 const db = admin.firestore();
 
 app.get('/posts',  (req, res) => {
+  res.set('Access-Control-Allow-Origin', '*');
+
   const posts = [];
 
   db.collection('posts')
+    .orderBy('date', 'desc')
     .get()
     .then(snapshot => {
       snapshot.forEach((doc) => {

@@ -34,6 +34,7 @@ app.get('/posts',  (req, res) => {
 app.post('/posts',  (req, res) => {
   res.set('Access-Control-Allow-Origin', '*');
   const busboy = new Busboy({ headers: req.headers });
+  const fields = {};
 
   busboy.on('file', function(fieldname, file, filename, encoding, mimetype) {
     console.log('File [' + fieldname + ']: filename: ' + filename + ', encoding: ' + encoding + ', mimetype: ' + mimetype);
@@ -46,11 +47,23 @@ app.post('/posts',  (req, res) => {
   });
 
   busboy.on('field', function(fieldname, val, fieldnameTruncated, valTruncated, encoding, mimetype) {
-    console.log('Field [' + fieldname + ']: value: ' + inspect(val));
+    //console.log('Field [' + fieldname + ']: value: ' + inspect(val));
+    fields[fieldname] = val;
   });
 
   busboy.on('finish', function() {
-    console.log('Done parsing form!');
+    const { id, caption, location, date } = fields;
+
+    db.collection('posts')
+      .doc(id)
+      .set({
+        id,
+        caption,
+        location,
+        date: parseInt(date),
+        imageUrl: ''
+      });
+    return res.send('Done parsing form!');
     //res.writeHead(303, { Connection: 'close', Location: '/' });
     res.end();
   });

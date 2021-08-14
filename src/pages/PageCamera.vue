@@ -191,6 +191,14 @@ export default {
       this.locationLoading = false;
     },
     async addPost() {
+      if (!this.post.photo) {
+        this.$q.dialog({
+          title: 'Error',
+          message: 'Need upload a photo!'
+        });
+        return;
+      }
+
       const formData = new FormData();
       formData.append('id', this.post.id);
       formData.append('caption', this.post.caption);
@@ -203,6 +211,10 @@ export default {
         console.log(res);
       } catch (err) {
         console.error(err);
+        this.$q.dialog({
+          title: 'Error',
+          message: err.message
+        });
       }
     },
     dataURItoBlob(dataURI) {

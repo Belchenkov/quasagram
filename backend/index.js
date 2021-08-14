@@ -27,7 +27,12 @@ app.get('/posts',  (req, res) => {
       });
       return res.send(posts);
     });
-})
+});
+
+app.post('/posts',  (req, res) => {
+  res.set('Access-Control-Allow-Origin', '*');
+
+});
 
 const PORT = process.env.PORT || 3000;
 

@@ -91,7 +91,7 @@ export default {
     getPosts() {
       this.loadingPosts = true;
 
-      this.$axios.get('http://localhost:3000/posts')
+      this.$axios.get(`${process.env.API}/posts`)
       .then(response => {
         this.posts = response.data;
         this.loadingPosts = false;

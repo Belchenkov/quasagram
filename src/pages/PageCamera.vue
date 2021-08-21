@@ -193,6 +193,8 @@ export default {
       this.locationLoading = false;
     },
     async addPost() {
+      this.$q.loading.show();
+
       if (!this.post.photo) {
         this.$q.dialog({
           title: 'Error',
@@ -210,15 +212,20 @@ export default {
 
       try {
         await this.$axios.post(`${process.env.API}/posts`, formData);
+
+        this.$q.loading.hide();
+
         this.$q.notify({
           message: 'Post created!',
           actions: [
             { label: 'Dismiss', color: 'white' }
           ]
         });
+
         this.$router.push('/');
       } catch (err) {
         console.error(err);
+        this.$q.loading.hide();
         this.$q.dialog({
           title: 'Error',
           message: err.message

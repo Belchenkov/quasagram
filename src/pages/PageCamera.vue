@@ -18,6 +18,7 @@
       <q-btn
         @click="captureImage"
         v-if="hasCameraSupport"
+        :disable="imageCaptured"
         color="primary"
         icon="eva-camera"
         round
@@ -66,6 +67,7 @@
       <div class="row justify-center q-mt-lg">
         <q-btn
           @click="addPost"
+          :disable="!post.caption || !post.photo"
           color="primary"
           label="Post Image"
           rounded

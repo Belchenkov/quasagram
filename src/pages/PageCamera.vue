@@ -209,8 +209,14 @@ export default {
       formData.append('file', this.post.photo, this.post.id + '.png');
 
       try {
-        const res = await this.$axios.post(`${process.env.API}/posts`, formData);
-        console.log(res);
+        await this.$axios.post(`${process.env.API}/posts`, formData);
+        this.$q.notify({
+          message: 'Post created!',
+          actions: [
+            { label: 'Dismiss', color: 'white' }
+          ]
+        });
+        this.$router.push('/');
       } catch (err) {
         console.error(err);
         this.$q.dialog({

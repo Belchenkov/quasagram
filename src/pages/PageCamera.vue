@@ -18,6 +18,7 @@
       <q-btn
         @click="captureImage"
         v-if="hasCameraSupport"
+        :disable="imageCaptured"
         color="primary"
         icon="eva-camera"
         round
@@ -65,6 +66,8 @@
       </div>
       <div class="row justify-center q-mt-lg">
         <q-btn
+          @click="addPost"
+          :disable="!post.caption || !post.photo"
           color="primary"
           label="Post Image"
           rounded
@@ -78,7 +81,6 @@
 
 <script>
 import { uid } from "quasar";
-require('md-gum-polyfill');
 
 export default {
   name: 'PageCamera',
@@ -189,6 +191,46 @@ export default {
         message: err.message
       });
       this.locationLoading = false;
+    },
+    async addPost() {
+      this.$q.loading.show();
+
+      if (!this.post.photo) {
+        this.$q.dialog({
+          title: 'Error',
+          message: 'Need upload a photo!'
+        });
+        return;
+      }
+
+      const formData = new FormData();
+      formData.append('id', this.post.id);
+      formData.append('caption', this.post.caption);
+      formData.append('location', this.post.location);
+      formData.append('date', this.post.date);
+      formData.append('file', this.post.photo, this.post.id + '.png');
+
+      try {
+        await this.$axios.post(`${process.env.API}/posts`, formData);
+
+        this.$q.loading.hide();
+
+        this.$q.notify({
+          message: 'Post created!',
+          actions: [
+            { label: 'Dismiss', color: 'white' }
+          ]
+        });
+
+        this.$router.push('/');
+      } catch (err) {
+        console.error(err);
+        this.$q.loading.hide();
+        this.$q.dialog({
+          title: 'Error',
+          message: err.message
+        });
+      }
     },
     dataURItoBlob(dataURI) {
       // convert base64 to raw binary data held in a string

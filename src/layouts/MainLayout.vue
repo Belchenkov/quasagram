@@ -33,7 +33,10 @@
     </q-page-container>
 
     <q-footer bordered class="bg-brown-8 small-screen-only" elevated>
-      <div class="banner-container bg-primary">
+      <div
+        v-if="showAppInstallBanner"
+        class="banner-container bg-primary"
+      >
         <div class="constrain">
           <q-banner
             inline-actions
@@ -78,12 +81,22 @@
 </template>
 
 <script>
+let deferredPrompt;
+
 export default {
   name: 'MainLayout',
   data () {
     return {
-      tab: ''
+      tab: '',
+      showAppInstallBanner: false,
     }
+  },
+  mounted() {
+    window.addEventListener('beforeinstallprompt', (e) => {
+      e.preventDefault();
+      deferredPrompt = e;
+      this.showAppInstallBanner = true;
+    })
   }
 }
 </script>

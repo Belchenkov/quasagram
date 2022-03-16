@@ -54,7 +54,13 @@
 
             <strong>Install Quasagram?</strong>
             <template v-slot:action>
-              <q-btn flat label="Yes" dense class="q-px-sm"/>
+              <q-btn
+                @click="installApp"
+                flat
+                label="Yes"
+                dense
+                class="q-px-sm"
+              />
               <q-btn flat label="Later" dense class="q-px-sm"/>
               <q-btn flat label="Never" dense class="q-px-sm"/>
             </template>
@@ -88,15 +94,33 @@ export default {
   data () {
     return {
       tab: '',
-      showAppInstallBanner: false,
+      showAppInstallBanner: true,
+    }
+  },
+  methods: {
+    installApp() {
+      this.showAppInstallBanner = false;
+      deferredPrompt.prompt();
+      deferredPrompt.userChoice
+        .then(choiceResult => {
+          if (choiceResult.outcome === 'accepted') {
+            console.log('User accepted the install prompt')
+          } else {
+            console.log('User dismissed the install prompt')
+          }
+        })
     }
   },
   mounted() {
     window.addEventListener('beforeinstallprompt', (e) => {
       e.preventDefault();
       deferredPrompt = e;
-      this.showAppInstallBanner = true;
-    })
+      console.log(deferredPrompt, '12333')
+      setTimeout(() => {
+        this.showAppInstallBanner = true;
+      }, 3000);
+    });
+
   }
 }
 </script>

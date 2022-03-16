@@ -33,66 +33,72 @@
     </q-page-container>
 
     <q-footer bordered class="bg-brown-8 small-screen-only" elevated>
-      <div
-        v-if="showAppInstallBanner"
-        class="banner-container bg-primary"
+      <transition
+        appear
+        enter-active-class="animated fadeIn"
+        leave-active-class="animated fadeOut"
       >
-        <div class="constrain">
-          <q-banner
-            inline-actions
-            class="bg-primary text-white"
-            dense
-          >
-            <template v-slot:avatar>
-              <q-avatar
-                color="white"
-                icon="eva-camera-outline"
-                text-color="grey-10"
-                font-size="22px"
-              />
-            </template>
-
-            <strong>Install Quasagram?</strong>
-            <template v-slot:action>
-              <q-btn
-                flat
-                label="Yes"
-                dense
-                class="q-px-sm"
-                @click="installApp"
-              />
-              <q-btn
-                flat
-                label="Later"
-                dense class="q-px-sm"
-                @click="showAppInstallBanner = false"
-              />
-              <q-btn
-                flat
-                label="Never"
-                dense
-                class="q-px-sm"
-                @click="neverShowAppInstallBanner"
-              />
-            </template>
-          </q-banner>
-        </div>
-      </div>
-        <q-tabs
-            indicator-color="transparent"
-            active-color="warning"
-            align="center"
-            class="text-white small-screen-only"
+        <div
+          v-if="showAppInstallBanner"
+          class="banner-container bg-primary"
         >
-          <q-route-tab
-            to="/"
-            icon="home"
-          />
-          <q-route-tab
-            to="/camera"
-            icon="camera"
-          />
-        </q-tabs>
+          <div class="constrain">
+            <q-banner
+              inline-actions
+              class="bg-primary text-white"
+              dense
+            >
+              <template v-slot:avatar>
+                <q-avatar
+                  color="white"
+                  icon="eva-camera-outline"
+                  text-color="grey-10"
+                  font-size="22px"
+                />
+              </template>
+
+              <strong>Install Quasagram?</strong>
+              <template v-slot:action>
+                <q-btn
+                  flat
+                  label="Yes"
+                  dense
+                  class="q-px-sm"
+                  @click="installApp"
+                />
+                <q-btn
+                  flat
+                  label="Later"
+                  dense class="q-px-sm"
+                  @click="showAppInstallBanner = false"
+                />
+                <q-btn
+                  flat
+                  label="Never"
+                  dense
+                  class="q-px-sm"
+                  @click="neverShowAppInstallBanner"
+                />
+              </template>
+            </q-banner>
+          </div>
+        </div>
+      </transition>
+      <q-tabs
+          indicator-color="transparent"
+          active-color="warning"
+          align="center"
+          class="text-white small-screen-only"
+      >
+        <q-route-tab
+          to="/"
+          icon="home"
+        />
+        <q-route-tab
+          to="/camera"
+          icon="camera"
+        />
+      </q-tabs>
     </q-footer>
   </q-layout>
 </template>

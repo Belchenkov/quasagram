@@ -55,14 +55,25 @@
             <strong>Install Quasagram?</strong>
             <template v-slot:action>
               <q-btn
-                @click="installApp"
                 flat
                 label="Yes"
                 dense
                 class="q-px-sm"
+                @click="installApp"
               />
-              <q-btn flat label="Later" dense class="q-px-sm"/>
-              <q-btn flat label="Never" dense class="q-px-sm"/>
+              <q-btn
+                flat
+                label="Later"
+                dense class="q-px-sm"
+                @click="showAppInstallBanner = false"
+              />
+              <q-btn
+                flat
+                label="Never"
+                dense
+                class="q-px-sm"
+                @click="neverShowAppInstallBanner"
+              />
             </template>
           </q-banner>
         </div>
@@ -104,23 +115,30 @@ export default {
       deferredPrompt.userChoice
         .then(choiceResult => {
           if (choiceResult.outcome === 'accepted') {
-            console.log('User accepted the install prompt')
+            console.log('User accepted the install prompt');
+            this.neverShowAppInstallBanner();
           } else {
             console.log('User dismissed the install prompt')
           }
         })
+    },
+    neverShowAppInstallBanner() {
+      this.showAppInstallBanner = false;
+      this.$q.localStorage.set('neverShowAppInstallBanner', true);
     }
   },
   mounted() {
-    window.addEventListener('beforeinstallprompt', (e) => {
-      e.preventDefault();
-      deferredPrompt = e;
-      console.log(deferredPrompt, '12333')
-      setTimeout(() => {
-        this.showAppInstallBanner = true;
-      }, 3000);
-    });
+    const neverShowAppInstallBanner = this.$q.localStorage.getItem('neverShowAppInstallBanner');
 
+    if (!neverShowAppInstallBanner) {
+      window.addEventListener('beforeinstallprompt', (e) => {
+        e.preventDefault();
+        deferredPrompt = e;
+        setTimeout(() => {
+          this.showAppInstallBanner = true;
+        }, 3000);
+      });
+    }
   }
 }
 </script>

@@ -33,31 +33,117 @@
     </q-page-container>
 
     <q-footer bordered class="bg-brown-8 small-screen-only" elevated>
-        <q-tabs
-            indicator-color="transparent"
-            active-color="warning"
-            align="center"
-            class="text-white"
+      <transition
+        appear
+        enter-active-class="animated fadeIn"
+        leave-active-class="animated fadeOut"
+      >
+        <div
+          v-if="showAppInstallBanner"
+          class="banner-container bg-primary"
         >
-          <q-route-tab
-            to="/"
-            icon="home"
-          />
-          <q-route-tab
-            to="/camera"
-            icon="camera"
-          />
-        </q-tabs>
+          <div class="constrain">
+            <q-banner
+              inline-actions
+              class="bg-primary text-white"
+              dense
+            >
+              <template v-slot:avatar>
+                <q-avatar
+                  color="white"
+                  icon="eva-camera-outline"
+                  text-color="grey-10"
+                  font-size="22px"
+                />
+              </template>
+
+              <strong>Install Quasagram?</strong>
+              <template v-slot:action>
+                <q-btn
+                  flat
+                  label="Yes"
+                  dense
+                  class="q-px-sm"
+                  @click="installApp"
+                />
+                <q-btn
+                  flat
+                  label="Later"
+                  dense class="q-px-sm"
+                  @click="showAppInstallBanner = false"
+                />
+                <q-btn
+                  flat
+                  label="Never"
+                  dense
+                  class="q-px-sm"
+                  @click="neverShowAppInstallBanner"
+                />
+              </template>
+            </q-banner>
+          </div>
+        </div>
+      </transition>
+      <q-tabs
+          indicator-color="transparent"
+          active-color="warning"
+          align="center"
+          class="text-white small-screen-only"
+      >
+        <q-route-tab
+          to="/"
+          icon="home"
+        />
+        <q-route-tab
+          to="/camera"
+          icon="camera"
+        />
+      </q-tabs>
     </q-footer>
   </q-layout>
 </template>
 
 <script>
+let deferredPrompt;
+
 export default {
   name: 'MainLayout',
   data () {
     return {
-      tab: ''
+      tab: '',
+      showAppInstallBanner: true,
+    }
+  },
+  methods: {
+    installApp() {
+      this.showAppInstallBanner = false;
+      deferredPrompt.prompt();
+      deferredPrompt.userChoice
+        .then(choiceResult => {
+          if (choiceResult.outcome === 'accepted') {
+            console.log('User accepted the install prompt');
+            this.neverShowAppInstallBanner();
+          } else {
+            console.log('User dismissed the install prompt')
+          }
+        })
+    },
+    neverShowAppInstallBanner() {
+      this.showAppInstallBanner = false;
+      this.$q.localStorage.set('neverShowAppInstallBanner', true);
+    }
+  },
+  mounted() {
+    const neverShowAppInstallBanner = this.$q.localStorage.getItem('neverShowAppInstallBanner');
+
+    if (!neverShowAppInstallBanner) {
+      window.addEventListener('beforeinstallprompt', (e) => {
+        e.preventDefault();
+        deferredPrompt = e;
+        setTimeout(() => {
+          this.showAppInstallBanner = true;
+        }, 3000);
+      });
     }
   }
 }
